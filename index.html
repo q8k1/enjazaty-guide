@@ -1,126 +1,377 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>دليل نظام إنجازاتي | Enjazaty Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enjazaty – Interactive Guide | دليل نظام إنجازاتي</title>
 <style>
-  * { box-sizing: border-box; }
-  body { margin: 0; font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #f4f6fb; color: #1f2937; }
-  header { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff; text-align: center; padding: 40px 20px; }
-  header h1 { margin: 0 0 8px; font-size: 2rem; }
-  header p { margin: 0; opacity: .9; }
-  main { max-width: 820px; margin: -30px auto 40px; padding: 0 16px; }
-  .card { background: #fff; border-radius: 14px; box-shadow: 0 6px 20px rgba(0,0,0,.08); padding: 28px; }
-  .progress { height: 8px; background: #e5e7eb; border-radius: 99px; overflow: hidden; margin-bottom: 20px; }
-  .progress div { height: 100%; background: #2563eb; width: 0; transition: width .3s; }
-  .steps-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-  .steps-nav button { border: 1px solid #cbd5e1; background: #fff; border-radius: 99px; padding: 6px 14px; cursor: pointer; font-size: .9rem; }
-  .steps-nav button.active { background: #2563eb; color: #fff; border-color: #2563eb; }
-  .steps-nav button.done { background: #dcfce7; border-color: #22c55e; }
-  .step { display: none; }
-  .step.active { display: block; animation: fade .3s; }
-  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; } }
-  .step h2 { color: #1e3a8a; margin-top: 0; }
-  .step ol { line-height: 2; }
-  .tip { background: #eff6ff; border-right: 4px solid #2563eb; padding: 12px 16px; border-radius: 8px; margin-top: 16px; }
-  .controls { display: flex; justify-content: space-between; margin-top: 24px; }
-  .controls button { background: #2563eb; color: #fff; border: 0; border-radius: 8px; padding: 10px 22px; font-size: 1rem; cursor: pointer; }
-  .controls button:disabled { background: #94a3b8; cursor: default; }
-  footer { text-align: center; color: #6b7280; font-size: .85rem; padding-bottom: 30px; }
+*{box-sizing:border-box}
+body{margin:0;font-family:Segoe UI,Tahoma,system-ui,sans-serif;font-size:13px;color:#1f2937;background:#fafafa}
+.navy{color:#0b2a4a}
+.app{display:flex;min-height:100vh}
+.side{width:160px;background:#000;color:#fff;flex-shrink:0;padding-top:6px}
+.side a{display:flex;gap:8px;align-items:center;padding:8px 10px;color:#fff;text-decoration:none;font-size:12px;cursor:pointer}
+.side a.active{background:#111;font-weight:700}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.page{display:none;padding:12px;flex:1}
+.page.show{display:block}
+.footer{background:#f1f1f1;padding:18px;text-align:right;font-size:11px;direction:rtl}
+.box{background:#fff;border:1px solid #e5e7eb;border-radius:4px}
+.btn{border:1px solid #d1d5db;background:#fff;border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer}
+.btn-dark{background:#0b2a4a;color:#fff;border:0;border-radius:5px;padding:7px 12px;font-weight:600;font-size:11px;cursor:pointer}
+.btn-yellow{background:#fbbf24;border:0;border-radius:5px;padding:4px 12px;font-size:11px;cursor:pointer}
+.pill{display:inline-block;border:1px solid #e5e7eb;border-radius:4px;padding:2px 6px;font-size:10px;color:#6b7280;margin-right:4px}
+.pill b{color:#111}
+.badge{display:inline-flex;align-items:center;gap:4px;background:#dcfce7;color:#166534;border-radius:10px;padding:1px 8px;font-size:10px}
+.badge.req{background:#e0e7ff;color:#3730a3}
+.badge::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.card{background:#fff;border:1px solid #e5e7eb;border-left:3px solid #15803d;border-radius:8px;padding:10px;width:235px;display:flex;flex-direction:column;gap:6px}
+.card.blue{border-left-color:#4338ca}
+.card h4{margin:0;font-size:13px;display:flex;justify-content:space-between}
+.card h4 small{font-weight:400;color:#6b7280;font-size:10px}
+.card .foot{border-top:1px solid #eee;padding-top:8px;margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#6b7280}
+.date-in{flex:1;background:#f5f5f5;border:1px solid #ddd;padding:3px 6px;font-size:10px;position:relative}
+.date-in span{display:block;font-size:9px;color:#555}
+.date-in::after{content:"📅";position:absolute;right:6px;top:6px;font-size:10px}
+.section-h{padding:10px;border-bottom:1px solid #eee;font-size:12px}
+/* add task */
+.form label{display:block;margin:14px 0 4px;font-size:11px;color:#374151}
+.form label.req::before{content:"* ";color:#dc2626}
+.form input,.form select,.form textarea{width:100%;border:1px solid #d1d5db;border-radius:4px;padding:6px;font-size:12px;font-family:inherit}
+.form textarea{width:50%;height:75px}
+.chips button{border:1px solid #d1d5db;background:#fff;border-radius:4px;padding:6px 10px;font-size:10px;font-weight:600;margin-right:4px;cursor:pointer;color:#0b2a4a}
+.chips button.on{background:#0b2a4a;color:#fff}
+/* calendar */
+.cal{width:100%;border-collapse:collapse;table-layout:fixed}
+.cal th{border:1px solid #ddd;font-size:12px;padding:3px}
+.cal td{border:1px solid #ddd;height:105px;vertical-align:top;text-align:right;padding:3px;font-size:11px}
+.cal td.muted{color:#aaa}
+.cal td.today{background:#fff8dc}
+.ev{display:block;text-align:left;color:#fff;font-size:10px;padding:2px 4px;border-radius:3px;margin-top:4px;cursor:pointer}
+/* view */
+.stat{flex:1;background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:12px}
+.stat b{font-size:20px;display:block}
+.stat span{font-size:11px;color:#6b7280}
+.rpill{border:1px solid #d1d5db;background:#fff;border-radius:16px;padding:5px 10px;font-size:11px;cursor:pointer}
+.rpill.on{background:#0b2a4a;color:#fff;border-color:#0b2a4a}
+/* modal */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:50;align-items:flex-start;justify-content:center;padding-top:40px}
+.overlay.show{display:flex}
+.modal{background:#fff;width:480px;max-height:88vh;overflow:auto;border-radius:4px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.modal .mh{display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid #eee}
+.modal .inner{margin:12px;border:1px solid #e5e7eb;border-left:4px solid #fbbf24;border-radius:6px;padding:14px}
+.modal .lbl{font-size:9px;color:#6b7280;font-weight:600;margin:12px 0 4px;text-transform:uppercase}
+.modal .fld{border:1px solid #ddd;border-radius:4px;padding:7px;font-size:11px;min-height:28px;margin-left:6px}
+.modal .area{min-height:70px}
+/* tour */
+#spot{position:fixed;z-index:90;border-radius:6px;box-shadow:0 0 0 9999px rgba(0,0,0,.45),0 0 0 3px #4f46e5;pointer-events:none;transition:all .25s}
+#tip{position:fixed;z-index:100;background:#fff;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.3);width:300px;padding:14px;transition:all .25s}
+#tip .ar{direction:rtl;text-align:right;color:#374151;margin-top:6px;border-top:1px dashed #ddd;padding-top:6px}
+#tip .en{font-weight:600;color:#0b2a4a}
+#tip .nav{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+#tip .nav button{border:0;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:12px}
+#tip .next{background:#4f46e5;color:#fff}
+#tip .back{background:#e5e7eb}
+#tip .count{font-size:11px;color:#6b7280}
+#tip .x{position:absolute;top:6px;right:9px;cursor:pointer;color:#999;border:0;background:none;font-size:14px}
+#help{position:fixed;bottom:16px;right:16px;z-index:110;background:#4f46e5;color:#fff;border:0;border-radius:50%;width:44px;height:44px;font-size:18px;cursor:pointer;display:none}
 </style>
 </head>
 <body>
-<header>
-  <h1>دليل نظام إنجازاتي</h1>
-  <p>دليل تفاعلي خطوة بخطوة — Interactive step-by-step guide</p>
-</header>
+<div class="app">
+  <!-- SIDEBAR -->
+  <nav class="side" id="side">
+    <a data-page="home" id="nav-home">⌂ Home</a>
+    <a data-page="add" id="nav-add">🎖 Add Task</a>
+    <a data-page="cal" id="nav-cal">▤ Calendar</a>
+    <a data-page="view" id="nav-view">☰ View Enjazaty</a>
+  </nav>
 
-<main>
-  <div class="card">
-    <div class="progress"><div id="bar"></div></div>
-    <div class="steps-nav" id="nav"></div>
+  <div class="main">
+    <!-- HOME -->
+    <section class="page" id="home">
+      <div class="box" style="text-align:center;padding:10px">
+        <div class="navy" style="font-size:18px;font-weight:700">📊 نظام إنجازاتي</div>
+        <div style="font-size:11px">Enjazaty</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 8px">
+        <b class="navy">Today's Tasks / مهام اليوم</b>
+        <button class="btn-dark" id="addBtn">+ Add Enjaz / إضافة إنجاز</button>
+      </div>
+      <div class="card" id="todayCard">
+        <h4>اضافة نوع انجاز <small>1 score</small></h4>
+        <div><span class="badge">Submitted</span></div>
+        <div style="font-size:11px">اضافة نوع (مهام ادارية) لانواع الانجاز</div>
+        <div><span class="pill">Project <b>Enjazaty</b></span><span class="pill">Priority <b>Low</b></span></div>
+        <div class="foot">06 Oct 2026 <button class="btn-yellow" id="todayOpen">Open</button></div>
+      </div>
+      <div class="box" id="totalScore" style="width:155px;margin:16px 0 8px;padding:10px;display:flex;justify-content:space-between"><b>Total Score</b><span class="pill"><b>1</b></span></div>
 
-    <section class="step">
-      <h2>الخطوة 1: تسجيل الدخول</h2>
-      <ol>
-        <li>افتح رابط نظام إنجازاتي من المتصفح.</li>
-        <li>أدخل اسم المستخدم وكلمة المرور.</li>
-        <li>اضغط على زر <b>تسجيل الدخول</b>.</li>
-      </ol>
-      <div class="tip">💡 إذا نسيت كلمة المرور، تواصل مع الدعم الفني.</div>
+      <div class="box" id="statusBox" style="margin-bottom:8px">
+        <div class="section-h">ملخص حالات الإنجازات | Status Summary</div>
+        <div style="padding:10px">
+          <div style="display:flex;gap:8px" id="pieDates">
+            <div class="date-in"><span>Start Date Pie</span>09-06-2026</div>
+            <div class="date-in"><span>End Date Pie</span>10-06-2026</div>
+          </div>
+          <div style="position:relative;height:190px;display:flex;align-items:center;justify-content:center">
+            <div id="pie" style="width:145px;height:145px;border-radius:50%;background:#4ade80;display:flex;align-items:center;justify-content:center;font-size:9px">Submitted</div>
+            <div style="position:absolute;right:6px;font-size:9px"><span style="color:#4ade80">■</span> Submitted</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box" id="barBox">
+        <div class="section-h">إجمالي النقاط | Rewarded Achievements</div>
+        <div style="padding:10px">
+          <div style="display:flex;gap:8px">
+            <div class="date-in"><span>Start Date</span>09-06-2026</div>
+            <div class="date-in"><span>End Date</span>10-06-2026</div>
+          </div>
+          <div id="bars" style="display:flex;align-items:flex-end;height:180px;border-bottom:1px solid #999;margin-top:12px;gap:2%"></div>
+          <div id="barNames" style="display:flex;gap:2%;font-size:7px;color:#6b7280;text-align:center;margin-top:4px"></div>
+        </div>
+      </div>
     </section>
 
-    <section class="step">
-      <h2>الخطوة 2: الصفحة الرئيسية</h2>
-      <ol>
-        <li>بعد الدخول ستظهر لوحة التحكم الرئيسية.</li>
-        <li>من القائمة الجانبية يمكنك الوصول لجميع الأقسام.</li>
-      </ol>
+    <!-- ADD TASK -->
+    <section class="page" id="add">
+      <div class="box" style="padding:14px">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
+          <div style="background:#0b2a4a;color:#fbbf24;width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center">🏆</div>
+          <div><div class="navy" style="font-size:16px;font-weight:700;border-bottom:2px solid #fbbf24;display:inline-block">وثّق إنجازك</div><div style="font-size:11px;color:#6b7280">Add Your Achievement</div></div>
+        </div>
+        <div class="form" style="border:1px solid #eee;border-left:3px solid #fbbf24;border-radius:6px;padding:4px 20px 16px">
+          <div id="f-dept"><label class="req">Department</label><input value="DEPT. of Systems Development"></div>
+          <div id="f-cat"><label class="req">Task Category</label><select><option></option><option>Enjazaty</option></select></div>
+          <div id="f-date"><label class="req">Task Date</label><input type="date"></div>
+          <div id="f-coll"><label>Collaborators</label><select style="background:#f5f5f5"><option></option></select></div>
+          <div id="f-type"><label class="req">Task Type</label>
+            <div class="chips"><button>DESIGN</button><button>DEVELOPMENT</button><button>DOCUMENTATION</button><button>MEETING</button><button>OTHER</button><button>SUPPORT</button><button>TROUBLESHOOT</button><button>مهام ادارية</button></div></div>
+          <div id="f-pri"><label class="req">Priority</label>
+            <div class="chips"><button style="color:#15803d">Low</button><button style="color:#b45309">Medium</button><button style="color:#b91c1c">High</button></div></div>
+          <div id="f-title"><label class="req">Task Title</label><input></div>
+          <div id="f-desc"><label class="req">Description</label><textarea></textarea></div>
+          <div id="f-obs"><label>Obstacle</label><textarea></textarea></div>
+          <div id="f-file"><label>File</label><div style="border:1px solid #d1d5db;border-radius:4px;padding:5px;font-size:11px">📁 Choose Files</div></div>
+        </div>
+      </div>
+      <button class="btn-dark" id="submitBtn" style="width:100%;margin-top:10px;padding:9px">Submit</button>
     </section>
 
-    <section class="step">
-      <h2>الخطوة 3: إضافة إنجاز جديد</h2>
-      <ol>
-        <li>اضغط على <b>إضافة إنجاز</b>.</li>
-        <li>عبّئ الحقول المطلوبة (العنوان، الوصف، التاريخ).</li>
-        <li>أرفق المستندات إن وجدت.</li>
-      </ol>
+    <!-- CALENDAR -->
+    <section class="page" id="cal">
+      <h2 style="margin:4px 0 12px;font-weight:600">View History</h2>
+      <div class="box">
+        <div class="section-h">Calender</div>
+        <div style="padding:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div id="calNav"><button class="btn">‹</button><button class="btn">›</button> <button class="btn" style="color:#999">today</button></div>
+            <div style="font-size:16px">October 2026</div>
+            <div id="calView"><button class="btn" style="background:#eee">month</button><button class="btn">list</button></div>
+          </div>
+          <table class="cal" id="calTable"></table>
+        </div>
+      </div>
     </section>
 
-    <section class="step">
-      <h2>الخطوة 4: الحفظ والإرسال</h2>
-      <ol>
-        <li>راجع البيانات المدخلة.</li>
-        <li>اضغط <b>حفظ</b> ثم <b>إرسال للاعتماد</b>.</li>
-      </ol>
-      <div class="tip">✅ يمكنك متابعة حالة الطلب من قائمة "إنجازاتي".</div>
+    <!-- VIEW ENJAZATY -->
+    <section class="page" id="view">
+      <div style="text-align:center;margin-bottom:12px">
+        <div class="navy" style="font-size:18px;font-weight:700">🎖 إنجازك يستحق التقدير</div>
+        <div class="navy">Your Achievement Deserves Recognition 🎖</div>
+      </div>
+      <div style="display:flex;gap:8px" id="stats">
+        <div class="stat"><b class="navy">4</b><span>All Tasks</span></div>
+        <div class="stat"><b style="color:#4338ca">1</b><span>Assigned</span></div>
+        <div class="stat"><b style="color:#b45309">0</b><span>Waiting on review</span></div>
+        <div class="stat"><b style="color:#15803d">3</b><span>Submitted</span></div>
+        <div class="stat"><b style="color:#b91c1c">0</b><span>Canceled</span></div>
+      </div>
+      <div style="border-bottom:1px solid #ddd;margin:16px 0 10px"><span style="display:inline-block;padding:6px 10px;border-bottom:2px solid #fbbf24;font-weight:600">My tasks</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div id="timeF"><button class="rpill on">All</button> <button class="rpill">Today</button> <button class="rpill">This week</button> <button class="rpill">This month</button></div>
+        <div id="rangeF" style="font-size:10px">From <input type="date" style="font-size:10px"> To <input type="date" style="font-size:10px"> <button class="rpill">Clear</button></div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;margin:10px 0">
+        <input id="searchF" placeholder="Search title, detail or category" style="flex:1;border:1px solid #d1d5db;border-radius:16px;padding:6px 10px;font-size:11px">
+        <span id="statusF"><button class="rpill on">All 4</button> <button class="rpill">Submitted 3</button> <button class="rpill">Assigned 1</button> <button class="rpill">Needs review 0</button> <button class="rpill">Canceled 0</button></span>
+        <span id="viewT"><button class="btn" style="background:#0b2a4a;color:#fff">▦</button><button class="btn">≡</button></span>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap" id="cards">
+        <div class="card"><h4>اضافة نوع انجاز <small>1 score</small></h4><div><span class="badge">Submitted</span></div><div style="font-size:11px">اضافة نوع (مهام ادارية) لانواع الانجاز</div><div><span class="pill">Category <b>Enjazaty</b></span><span class="pill">Priority <b>Low</b></span></div><div class="foot">06 Oct 2026 <button class="btn-yellow">Open</button></div></div>
+        <div class="card blue"><h4>User Manual <small>0 score</small></h4><div><span class="badge req">Request</span></div><div style="font-size:11px">Kindly start preparing the user manual for supervisor and employee Make sure to add the read write staus for the tasks</div><div><span class="pill">Category <b>Enjazaty</b></span><span class="pill">Priority <b>Medium</b></span></div><div class="foot">29 Sep 2026 <button class="btn-yellow">Open</button></div></div>
+        <div class="card"><h4>Testing Loading <small>2 score</small></h4><div><span class="badge">Submitted</span></div><div style="font-size:11px">Testing page loading test 1</div><div><span class="pill">Category <b>Enjazaty</b></span><span class="pill">Priority <b>Low</b></span></div><div class="foot">09 Sep 2026 <button class="btn-yellow">Open</button></div></div>
+        <div class="card" id="launchCard"><h4>launching enjazaty <small>3 score</small></h4><div><span class="badge">Submitted</span></div><div style="font-size:11px">launching enjazaty</div><div><span class="pill">Category <b>Enjazaty</b></span><span class="pill">Priority <b>High</b></span></div><div class="foot">19 Aug 2026 <button class="btn-yellow" id="launchOpen">Open</button></div></div>
+      </div>
     </section>
 
-    <section class="step">
-      <h2>🎉 تم!</h2>
-      <p>أكملت الدليل بنجاح. للمساعدة تواصل مع فريق الدعم.</p>
-    </section>
-
-    <div class="controls">
-      <button id="prev">→ السابق</button>
-      <button id="next">التالي ←</button>
-    </div>
+    <div class="footer">© 2026 جامعة الكويت - مركز نظم المعلومات.</div>
   </div>
-</main>
+</div>
 
-<footer>© دليل نظام إنجازاتي</footer>
+<!-- TASK MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <div class="mh"><b>Task</b><button class="btn" id="mClose" style="padding:0 6px">✕</button></div>
+    <div class="inner" id="mInner">
+      <div style="display:flex;justify-content:space-between">
+        <div><div class="lbl" style="margin-top:0">Enjaz Details</div>
+          <div class="navy" id="mTitle" style="font-size:15px;font-weight:700"></div>
+          <div style="font-size:11px">Date <b id="mDate"></b></div>
+          <div style="font-size:11px">Created by <b>خالد المري</b></div></div>
+        <div><span class="badge" id="mStatus">Submitted</span></div>
+      </div>
+      <hr style="border:0;border-top:1px solid #eee">
+      <div id="mDept"><div class="lbl">Department</div><div class="fld">DEPT. of Systems Development</div></div>
+      <div style="display:flex;gap:10px" id="mProj">
+        <div style="flex:1"><div class="lbl">Project</div><div class="fld">Enjazaty</div></div>
+        <div style="flex:1"><div class="lbl">Priority</div><div class="fld" id="mPri"></div></div>
+      </div>
+      <div><div class="lbl">Collaborators</div><div class="fld"></div></div>
+      <div id="mDetail"><div class="lbl">Achievement Detail</div><div class="fld area" id="mDesc"></div></div>
+      <div><div class="lbl">Obstacles</div><div class="fld area"></div></div>
+    </div>
+    <div class="inner" id="mFile" style="border-left:1px solid #e5e7eb;padding:0">
+      <div style="padding:10px;background:#f8fafc;border-bottom:1px solid #eee"><b class="navy">File</b></div>
+      <div style="text-align:center;padding:16px;font-size:11px"><b>No files attached</b><br>This task has no supporting documents.</div>
+    </div>
+    <div style="border-top:1px solid #eee;padding:12px"><button class="btn" id="mClose2">Close</button></div>
+  </div>
+</div>
+
+<!-- TOUR UI -->
+<div id="spot"></div>
+<div id="tip">
+  <button class="x" id="tipX">✕</button>
+  <div class="en" id="tipEn"></div>
+  <div class="ar" id="tipAr"></div>
+  <div class="nav"><button class="back" id="tipBack">Back</button><span class="count" id="tipCount"></span><button class="next" id="tipNext">Next</button></div>
+</div>
+<button id="help" title="Show guide">?</button>
 
 <script>
-  const steps = document.querySelectorAll('.step');
-  const nav = document.getElementById('nav');
-  const bar = document.getElementById('bar');
-  const prev = document.getElementById('prev');
-  const next = document.getElementById('next');
-  let current = 0;
+/* ---------- build charts & calendar ---------- */
+const people=[["JUMANA A Y KHAJAH",31],["HEND I T ALDUAIJ",26],["ASHWAQ SALAH DERIE",17],["YOUSEF M D ALENEZI",8],["MANAL ELCHEIKH",4],["KHALED S M ALMARRI",3],["ZAINAB ALI ALAMER",2],["ANAS LUTFI JAMIL NAYEEH",0],["ALAA A A ALSEBAEI",0],["ZAINAB Y R ALI",0],["MARIAM M F M D ALRASHED",0]];
+bars.innerHTML=people.map(p=>`<div style="flex:1;height:${p[1]/35*100}%;background:#349fdc"></div>`).join("");
+barNames.innerHTML=people.map(p=>`<div style="flex:1">${p[0]}</div>`).join("");
 
-  steps.forEach((s, i) => {
-    const b = document.createElement('button');
-    b.textContent = i + 1;
-    b.onclick = () => show(i);
-    nav.appendChild(b);
-  });
+let html="<tr>"+["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d=>`<th>${d}</th>`).join("")+"</tr>";
+const days=[27,28,29,30,...Array.from({length:31},(_,i)=>i+1)];
+days.forEach((d,i)=>{
+  if(i%7===0) html+="<tr>";
+  const muted=i<4, today=!muted&&d===6;
+  let ev="";
+  if(muted&&d===29) ev='<span class="ev" style="background:#9ca3af" id="evManual">User Manual</span>';
+  if(today) ev='<span class="ev" style="background:#2e7d32;direction:rtl" id="evToday">اضافة نوع انجاز</span>';
+  html+=`<td class="${muted?'muted':''} ${today?'today':''}">${d}${ev}</td>`;
+  if(i%7===6) html+="</tr>";
+});
+calTable.innerHTML=html;
 
-  function show(i) {
-    current = i;
-    steps.forEach((s, j) => s.classList.toggle('active', j === i));
-    [...nav.children].forEach((b, j) => {
-      b.classList.toggle('active', j === i);
-      b.classList.toggle('done', j < i);
-    });
-    bar.style.width = ((i + 1) / steps.length * 100) + '%';
-    prev.disabled = i === 0;
-    next.disabled = i === steps.length - 1;
-  }
+/* chip toggle in Add Task */
+document.querySelectorAll(".chips").forEach(c=>c.onclick=e=>{if(e.target.tagName==="BUTTON"){c.querySelectorAll("button").forEach(b=>b.classList.remove("on"));e.target.classList.add("on");}});
 
-  prev.onclick = () => current > 0 && show(current - 1);
-  next.onclick = () => current < steps.length - 1 && show(current + 1);
-  show(0);
+/* ---------- modal ---------- */
+const tasks={
+  today:{t:"اضافة نوع انجاز",d:"06-OCT-2026",p:"Low",desc:"اضافة نوع (مهام ادارية) لانواع الانجاز"},
+  launch:{t:"launching enjazaty",d:"19-AUG-2026",p:"High",desc:"launching enjazaty"}
+};
+function openModal(k){const t=tasks[k];mTitle.textContent=t.t;mDate.textContent=t.d;mPri.textContent=t.p;mDesc.textContent=t.desc;overlay.classList.add("show");}
+function closeModal(){overlay.classList.remove("show");}
+mClose.onclick=mClose2.onclick=closeModal;
+todayOpen.onclick=()=>openModal("today");
+launchOpen.onclick=()=>openModal("launch");
+evToday.onclick=()=>openModal("today");
+
+/* ---------- pages ---------- */
+function showPage(p){
+  document.querySelectorAll(".page").forEach(s=>s.classList.toggle("show",s.id===p));
+  document.querySelectorAll(".side a").forEach(a=>a.classList.toggle("active",a.dataset.page===p));
+}
+
+/* ---------- tour steps ---------- */
+const S=(page,el,en,ar,modal)=>({page,el,en,ar,modal});
+const steps=[
+ S("home","nav-home","Welcome to Enjazaty! This is the Home page. Use the sidebar to move between pages.","مرحباً بك في نظام إنجازاتي! هذه الصفحة الرئيسية. استخدم القائمة الجانبية للتنقل بين الصفحات."),
+ S("home","addBtn","Click “+ Add Enjaz” to quickly record a new achievement.","اضغط على \"إضافة إنجاز\" لتسجيل إنجاز جديد بسرعة."),
+ S("home","todayCard","Today's Tasks shows the achievements you logged today, with status, project and priority.","تعرض مهام اليوم الإنجازات المسجلة اليوم مع الحالة والمشروع والأولوية."),
+ S("home","todayOpen","Click “Open” to view the full details of a task.","اضغط على \"Open\" لعرض تفاصيل المهمة كاملة."),
+ S("home","mInner","The task popup shows all details: title, date, creator, department, project, priority and description.","تعرض النافذة جميع التفاصيل: العنوان، التاريخ، المنشئ، القسم، المشروع، الأولوية والوصف.","today"),
+ S("home","mFile","Any attached supporting files appear here.","تظهر هنا الملفات المرفقة الداعمة للمهمة.","today"),
+ S("home","mClose2","Click “Close” to return to the page.","اضغط \"Close\" للعودة إلى الصفحة.","today"),
+ S("home","totalScore","Total Score shows the points you earned from your achievements.","يعرض مجموع النقاط التي حصلت عليها من إنجازاتك."),
+ S("home","statusBox","Status Summary shows your achievements by status. Change the start and end dates to filter the chart.","يعرض ملخص الحالات إنجازاتك حسب الحالة. غيّر تاريخ البداية والنهاية لتصفية الرسم."),
+ S("home","barBox","Rewarded Achievements compares employees' total points within the selected dates.","يقارن إجمالي النقاط نقاط الموظفين خلال الفترة المحددة."),
+ S("add","nav-add","Go to “Add Task” to document a new achievement.","انتقل إلى \"Add Task\" لتوثيق إنجاز جديد."),
+ S("add","f-dept","Your department is filled in automatically.","يتم تعبئة القسم تلقائياً."),
+ S("add","f-cat","Choose the task category (project).","اختر تصنيف المهمة (المشروع)."),
+ S("add","f-date","Pick the date the task was done.","اختر تاريخ إنجاز المهمة."),
+ S("add","f-coll","Optional: add colleagues who worked with you.","اختياري: أضف الزملاء الذين شاركوك المهمة."),
+ S("add","f-type","Select the type of task.","اختر نوع المهمة."),
+ S("add","f-pri","Choose the priority: Low, Medium or High.","حدد الأولوية: منخفضة، متوسطة أو عالية."),
+ S("add","f-title","Write a short, clear title.","اكتب عنواناً قصيراً وواضحاً."),
+ S("add","f-desc","Describe what you achieved.","اكتب وصفاً لما أنجزته."),
+ S("add","f-obs","Optional: mention any obstacles you faced.","اختياري: اذكر العوائق التي واجهتك."),
+ S("add","f-file","Optional: attach supporting files.","اختياري: أرفق ملفات داعمة."),
+ S("add","submitBtn","Click “Submit” to save your achievement. Fields marked * are required.","اضغط \"Submit\" لحفظ الإنجاز. الحقول المعلّمة بـ * إلزامية."),
+ S("cal","nav-cal","The Calendar shows your history of achievements by date.","يعرض التقويم سجل إنجازاتك حسب التاريخ."),
+ S("cal","calNav","Use the arrows to move between months, or “today” to jump back.","استخدم الأسهم للتنقل بين الأشهر، أو \"today\" للعودة لليوم الحالي."),
+ S("cal","calView","Switch between Month view and List view.","بدّل بين عرض الشهر وعرض القائمة."),
+ S("cal","evToday","Each colored bar is a task. Click it to open its details. Today is highlighted in yellow.","كل شريط ملون يمثل مهمة، اضغط عليه لعرض التفاصيل. اليوم الحالي مظلل بالأصفر."),
+ S("cal","mInner","The same task details popup opens from the calendar.","تظهر نفس نافذة تفاصيل المهمة من التقويم.","today"),
+ S("view","nav-view","“View Enjazaty” lists all your tasks in one place.","تعرض صفحة \"View Enjazaty\" جميع مهامك في مكان واحد."),
+ S("view","stats","These counters summarize your tasks by status.","تلخص هذه العدادات مهامك حسب الحالة."),
+ S("view","timeF","Quick filters: All, Today, This week or This month.","فلاتر سريعة: الكل، اليوم، هذا الأسبوع أو هذا الشهر."),
+ S("view","rangeF","Or choose a custom date range, then “Clear” to reset.","أو اختر فترة مخصصة، ثم \"Clear\" لإعادة الضبط."),
+ S("view","searchF","Search by title, detail or category.","ابحث بالعنوان أو التفاصيل أو التصنيف."),
+ S("view","statusF","Filter tasks by status.","صفِّ المهام حسب الحالة."),
+ S("view","viewT","Switch between card view and list view.","بدّل بين عرض البطاقات وعرض القائمة."),
+ S("view","launchCard","Each card shows a task with its score. Click “Open” for details.","كل بطاقة تعرض مهمة ونقاطها. اضغط \"Open\" للتفاصيل."),
+ S("view","mInner","Here are the full task details. That's the end of the guide! 🎉","هذه تفاصيل المهمة كاملة. انتهى الدليل! 🎉","launch")
+];
+
+let i=0;
+function render(){
+  const s=steps[i];
+  showPage(s.page);
+  s.modal?openModal(s.modal):closeModal();
+  const el=document.getElementById(s.el);
+  el.scrollIntoView({block:"center",behavior:"instant"});
+  tipEn.textContent=s.en; tipAr.textContent=s.ar;
+  tipCount.textContent=`${i+1} / ${steps.length}`;
+  tipBack.style.visibility=i?"visible":"hidden";
+  tipNext.textContent=i===steps.length-1?"Restart ↺":"Next →";
+  requestAnimationFrame(()=>place(el));
+}
+function place(el){
+  const r=el.getBoundingClientRect(),pad=5;
+  Object.assign(spot.style,{left:r.left-pad+"px",top:r.top-pad+"px",width:r.width+pad*2+"px",height:r.height+pad*2+"px"});
+  const tw=300,th=tip.offsetHeight,vw=innerWidth,vh=innerHeight;
+  let top=r.bottom+14,left=r.left;
+  if(top+th>vh) top=r.top-th-14;            // above
+  if(top<0){ top=Math.max(10,r.top); left=r.right+14; if(left+tw>vw) left=r.left-tw-14; } // side
+  left=Math.min(Math.max(10,left),vw-tw-10);
+  top=Math.min(Math.max(10,top),vh-th-10);
+  tip.style.left=left+"px"; tip.style.top=top+"px";
+}
+function go(n){i=(n+steps.length)%steps.length;render();}
+tipNext.onclick=()=>go(i+1);
+tipBack.onclick=()=>go(i-1);
+function hideTour(){tip.style.display=spot.style.display="none";help.style.display="block";}
+function showTour(){tip.style.display=spot.style.display="block";help.style.display="none";render();}
+tipX.onclick=hideTour; help.onclick=showTour;
+addEventListener("keydown",e=>{
+  if(e.key==="Escape")hideTour();
+  if(tip.style.display==="none")return;
+  if(e.key==="ArrowRight")go(i+1);
+  if(e.key==="ArrowLeft")go(i-1);
+});
+addEventListener("resize",()=>render());
+/* sidebar jumps to that page's first step */
+side.onclick=e=>{const a=e.target.closest("a");if(!a)return;showTour();go(steps.findIndex(s=>s.page===a.dataset.page));};
+
+render();
 </script>
 </body>
 </html>
