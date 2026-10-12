@@ -171,7 +171,7 @@
     byId("tipAr").textContent = step.ar;
     byId("tipCount").textContent = `${stepIndex + 1} / ${steps.length}`;
     byId("tipBack").disabled = stepIndex === 0;
-    byId("tipNext").textContent = stepIndex === steps.length - 1 ? "Restart ↺" : "Next →";
+    byId("tipNext").textContent = stepIndex === steps.length - 1 ? "End ✓" : "Next →";
     byId(step.el)?.scrollIntoView({block:"center",behavior:"instant"});
     requestAnimationFrame(place);
   }
@@ -188,19 +188,38 @@
   }
   function showTour() {
     if (!steps.length) return;
+    hideStart();
+    stepIndex = 0;
     tourOpen = true;
     tip.hidden = spot.hidden = false;
     help.hidden = true;
     renderStep();
     byId("tipX").focus({preventScroll:true});
   }
+  let start = null;
+  function hideStart() {
+    if (start) start.hidden = true;
+  }
+  if (steps.length && tip && help) {
+    start = document.createElement("div");
+    start.className = "start-overlay";
+    start.innerHTML = '<div class="start-box" role="dialog" aria-modal="true" aria-label="بدء الشرح التفاعلي"><button type="button" class="start-btn" id="startBtn">ابدأ</button></div>';
+    document.body.append(start);
+    help.hidden = true;
+    listen("startBtn", "click", showTour);
+    byId("startBtn").focus({preventScroll:true});
+  }
   listen("tipX", "click", hideTour);
   listen("help", "click", showTour);
-  listen("tipNext", "click", () => go(stepIndex + 1));
+  listen("tipNext", "click", () => {
+    if (stepIndex === steps.length - 1) hideTour();
+    else go(stepIndex + 1);
+  });
   listen("tipBack", "click", () => go(stepIndex - 1));
   addEventListener("keydown", event => {
     if (event.key === "Escape") {
-      if (tourOpen) hideTour();
+      if (start && !start.hidden) { hideStart(); help.hidden = false; help.focus({preventScroll:true}); }
+      else if (tourOpen) hideTour();
       else closeModal();
       return;
     }
@@ -214,8 +233,9 @@
         event.preventDefault(); first?.focus();
       }
     }
+    if (start && !start.hidden && event.key === "Tab") { event.preventDefault(); byId("startBtn").focus(); }
     if (!tourOpen || /INPUT|SELECT|TEXTAREA/.test(event.target.tagName)) return;
-    if (event.key === "ArrowRight") { event.preventDefault(); go(stepIndex + 1); }
+    if (event.key === "ArrowRight" && stepIndex < steps.length - 1) { event.preventDefault(); go(stepIndex + 1); }
     if (event.key === "ArrowLeft" && stepIndex > 0) { event.preventDefault(); go(stepIndex - 1); }
   });
   addEventListener("resize", place);
