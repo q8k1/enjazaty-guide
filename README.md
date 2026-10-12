@@ -16,4 +16,5 @@ When a guide page opens, press **ابدأ** to start the tutorial immediately; u
 to close it, and the glowing **?** button to reopen it. The calendar uses the original October 2026 demo data.
 These are illustrative guide screens, not a backend for saving achievements.
 
-The original `index.html` and `index_Version2.html` remain unchanged.
+The root `index.html` redirects to `multipage/` so the GitHub Pages site
+(https://q8k1.github.io/enjazaty-guide/) opens the guide hub.
