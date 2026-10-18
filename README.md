@@ -11,7 +11,7 @@ Start with the [multi-page guide hub](multipage/index.html):
 Open the hub directly in a browser, or serve this directory with
 `python3 -m http.server 8000` and visit `/multipage/`. No build or dependencies
 are required. Each guide includes its own original Arabic/English tutorial.
-When a guide page opens, press **ابدأ** to start the tutorial immediately; use
+When a guide page opens, press **ابدأ** in the welcome popup to start the tutorial (or **لاحقاً / Later** to skip it); use
 **Back/Next** or arrow keys to navigate, **End** on the last step or **Escape**
 to close it, and the glowing **?** button to reopen it. The calendar uses the original October 2026 demo data.
 These are illustrative guide screens, not a backend for saving achievements.

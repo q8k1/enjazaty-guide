@@ -198,15 +198,28 @@
   }
   let start = null;
   function hideStart() {
-    if (start) start.hidden = true;
+    if (start?.open) start.close();
   }
   if (steps.length && tip && help) {
-    start = document.createElement("div");
-    start.className = "start-overlay";
-    start.innerHTML = '<div class="start-box" role="dialog" aria-modal="true" aria-label="بدء الشرح التفاعلي"><button type="button" class="start-btn" id="startBtn">ابدأ</button></div>';
+    start = document.createElement("dialog");
+    start.className = "tour-welcome";
+    start.setAttribute("aria-labelledby", "welcomeTitle");
+    start.setAttribute("aria-describedby", "welcomeDescription");
+    start.innerHTML = '<h2 id="welcomeTitle" dir="rtl">مرحباً بك في دليل نظام إنجازاتي</h2>'
+      + '<p id="welcomeDescription" dir="rtl">اضغط ابدأ لبدء الشرح التفاعلي لهذه الصفحة.</p>'
+      + '<p lang="en" dir="ltr">Start the interactive guide for this page.</p>'
+      + '<div class="welcome-actions"><button type="button" class="btn-dark" id="startBtn">ابدأ</button>'
+      + '<button type="button" class="btn" id="laterBtn">لاحقاً / Later</button></div>';
     document.body.append(start);
     help.hidden = true;
+    start.addEventListener("close", () => {
+      if (tourOpen) return;
+      help.hidden = false;
+      help.focus({preventScroll:true});
+    });
     listen("startBtn", "click", showTour);
+    listen("laterBtn", "click", hideStart);
+    start.showModal();
     byId("startBtn").focus({preventScroll:true});
   }
   listen("tipX", "click", hideTour);
@@ -218,8 +231,8 @@
   listen("tipBack", "click", () => go(stepIndex - 1));
   addEventListener("keydown", event => {
     if (event.key === "Escape") {
-      if (start && !start.hidden) { hideStart(); help.hidden = false; help.focus({preventScroll:true}); }
-      else if (tourOpen) hideTour();
+      if (start?.open) return;
+      if (tourOpen) hideTour();
       else closeModal();
       return;
     }
@@ -233,7 +246,6 @@
         event.preventDefault(); first?.focus();
       }
     }
-    if (start && !start.hidden && event.key === "Tab") { event.preventDefault(); byId("startBtn").focus(); }
     if (!tourOpen || /INPUT|SELECT|TEXTAREA/.test(event.target.tagName)) return;
     if (event.key === "ArrowRight" && stepIndex < steps.length - 1) { event.preventDefault(); go(stepIndex + 1); }
     if (event.key === "ArrowLeft" && stepIndex > 0) { event.preventDefault(); go(stepIndex - 1); }
