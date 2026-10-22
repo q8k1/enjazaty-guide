@@ -4,7 +4,7 @@
   const listen = (id, event, callback) => byId(id)?.addEventListener(event, callback);
   const data = byId("guide-steps");
   const steps = data ? JSON.parse(data.textContent) : [];
-  const people = [["SARA AL-WARD",31],["OMAR AL-SAHAB",26],["LAYAN AL-NOOR",17],["YOUSEF AL-RAWDA",8],["HIND AL-RABEE",4],["FARIS AL-QAMAR",3],["MAHA AL-NASEEM",2],["RASHED AL-OFOQ",0],["REEM AL-ZAHR",0],["NADER AL-WADI",0],["AMAL AL-GHAD",0]];
+  const people = [["Employee 1",31],["Employee 2",26],["Employee 3",17],["Employee 4",8],["Employee 5",4],["Employee 6",3],["Employee 7",2],["Employee 8",0],["Employee 9",0],["Employee 10",0],["Employee 11",0]];
   if (byId("bars")) {
     byId("bars").innerHTML = people.map(p => `<div style="flex:1;height:${p[1]/35*100}%;background:#349fdc" title="${p[0]}: ${p[1]}"></div>`).join("");
     byId("barNames").innerHTML = people.map(p => `<div style="flex:1">${p[0]}</div>`).join("");
